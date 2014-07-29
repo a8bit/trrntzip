@@ -7,8 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AA5B47CB198841510071745F /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = AA5B47CA198841510071745F /* main.c */; };
 		AA5B47CD198841510071745F /* trrntzip.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA5B47CC198841510071745F /* trrntzip.1 */; };
+		AAD6856619884266009D85DF /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = AAD6855519884266009D85DF /* ioapi.c */; };
+		AAD6856719884266009D85DF /* logging.c in Sources */ = {isa = PBXBuildFile; fileRef = AAD6855719884266009D85DF /* logging.c */; };
+		AAD6856819884266009D85DF /* platform.c in Sources */ = {isa = PBXBuildFile; fileRef = AAD6855A19884266009D85DF /* platform.c */; };
+		AAD6856919884266009D85DF /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = AAD6855C19884266009D85DF /* main.c */; };
+		AAD6856A19884266009D85DF /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = AAD6855D19884266009D85DF /* unzip.c */; };
+		AAD6856B19884266009D85DF /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = AAD6855F19884266009D85DF /* util.c */; };
+		AAD6856C19884266009D85DF /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = AAD6856119884266009D85DF /* zip.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,8 +32,33 @@
 
 /* Begin PBXFileReference section */
 		AA5B47C7198841510071745F /* trrntzip */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = trrntzip; sourceTree = BUILT_PRODUCTS_DIR; };
-		AA5B47CA198841510071745F /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		AA5B47CC198841510071745F /* trrntzip.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = trrntzip.1; sourceTree = "<group>"; };
+		AAD6854919884266009D85DF /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = AUTHORS; path = ../AUTHORS; sourceTree = "<group>"; };
+		AAD6854A19884266009D85DF /* autogen.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = autogen.sh; path = ../autogen.sh; sourceTree = "<group>"; };
+		AAD6854B19884266009D85DF /* ChangeLog */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ChangeLog; path = ../ChangeLog; sourceTree = "<group>"; };
+		AAD6854C19884266009D85DF /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = configure.ac; path = ../configure.ac; sourceTree = "<group>"; };
+		AAD6854D19884266009D85DF /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = COPYING; path = ../COPYING; sourceTree = "<group>"; };
+		AAD6854E19884266009D85DF /* INSTALL */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = INSTALL; path = ../INSTALL; sourceTree = "<group>"; };
+		AAD6855019884266009D85DF /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = NEWS; path = ../NEWS; sourceTree = "<group>"; };
+		AAD6855119884266009D85DF /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../README; sourceTree = "<group>"; };
+		AAD6855319884266009D85DF /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crypt.h; path = ../src/crypt.h; sourceTree = "<group>"; };
+		AAD6855419884266009D85DF /* global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = global.h; path = ../src/global.h; sourceTree = "<group>"; };
+		AAD6855519884266009D85DF /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ioapi.c; path = ../src/ioapi.c; sourceTree = "<group>"; };
+		AAD6855619884266009D85DF /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioapi.h; path = ../src/ioapi.h; sourceTree = "<group>"; };
+		AAD6855719884266009D85DF /* logging.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = logging.c; path = ../src/logging.c; sourceTree = "<group>"; };
+		AAD6855819884266009D85DF /* logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = logging.h; path = ../src/logging.h; sourceTree = "<group>"; };
+		AAD6855919884266009D85DF /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Makefile.am; path = ../src/Makefile.am; sourceTree = "<group>"; };
+		AAD6855A19884266009D85DF /* platform.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = platform.c; path = ../src/platform.c; sourceTree = "<group>"; };
+		AAD6855B19884266009D85DF /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = platform.h; path = ../src/platform.h; sourceTree = "<group>"; };
+		AAD6855C19884266009D85DF /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = ../src/main.c; sourceTree = "<group>"; };
+		AAD6855D19884266009D85DF /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = unzip.c; path = ../src/unzip.c; sourceTree = "<group>"; };
+		AAD6855E19884266009D85DF /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unzip.h; path = ../src/unzip.h; sourceTree = "<group>"; };
+		AAD6855F19884266009D85DF /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = util.c; path = ../src/util.c; sourceTree = "<group>"; };
+		AAD6856019884266009D85DF /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../src/util.h; sourceTree = "<group>"; };
+		AAD6856119884266009D85DF /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip.c; path = ../src/zip.c; sourceTree = "<group>"; };
+		AAD6856219884266009D85DF /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zip.h; path = ../src/zip.h; sourceTree = "<group>"; };
+		AAD6856319884266009D85DF /* torrentzip.spec.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrentzip.spec.in; path = ../torrentzip.spec.in; sourceTree = "<group>"; };
+		AAD6856519884266009D85DF /* purgecruft.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = purgecruft.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +75,7 @@
 		AA5B47BE198841510071745F = {
 			isa = PBXGroup;
 			children = (
+				AAD6856419884266009D85DF /* util */,
 				AA5B47C9198841510071745F /* trrntzip */,
 				AA5B47C8198841510071745F /* Products */,
 			);
@@ -60,10 +92,42 @@
 		AA5B47C9198841510071745F /* trrntzip */ = {
 			isa = PBXGroup;
 			children = (
-				AA5B47CA198841510071745F /* main.c */,
+				AAD6854919884266009D85DF /* AUTHORS */,
+				AAD6854A19884266009D85DF /* autogen.sh */,
+				AAD6854B19884266009D85DF /* ChangeLog */,
+				AAD6854C19884266009D85DF /* configure.ac */,
+				AAD6854D19884266009D85DF /* COPYING */,
+				AAD6854E19884266009D85DF /* INSTALL */,
+				AAD6855019884266009D85DF /* NEWS */,
+				AAD6855119884266009D85DF /* README */,
+				AAD6856319884266009D85DF /* torrentzip.spec.in */,
+				AAD6855319884266009D85DF /* crypt.h */,
+				AAD6855419884266009D85DF /* global.h */,
+				AAD6855519884266009D85DF /* ioapi.c */,
+				AAD6855619884266009D85DF /* ioapi.h */,
+				AAD6855719884266009D85DF /* logging.c */,
+				AAD6855819884266009D85DF /* logging.h */,
+				AAD6855919884266009D85DF /* Makefile.am */,
+				AAD6855A19884266009D85DF /* platform.c */,
+				AAD6855B19884266009D85DF /* platform.h */,
+				AAD6855C19884266009D85DF /* main.c */,
+				AAD6855D19884266009D85DF /* unzip.c */,
+				AAD6855E19884266009D85DF /* unzip.h */,
+				AAD6855F19884266009D85DF /* util.c */,
+				AAD6856019884266009D85DF /* util.h */,
+				AAD6856119884266009D85DF /* zip.c */,
+				AAD6856219884266009D85DF /* zip.h */,
 				AA5B47CC198841510071745F /* trrntzip.1 */,
 			);
 			path = trrntzip;
+			sourceTree = "<group>";
+		};
+		AAD6856419884266009D85DF /* util */ = {
+			isa = PBXGroup;
+			children = (
+				AAD6856519884266009D85DF /* purgecruft.py */,
+			);
+			path = util;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -117,7 +181,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA5B47CB198841510071745F /* main.c in Sources */,
+				AAD6856A19884266009D85DF /* unzip.c in Sources */,
+				AAD6856C19884266009D85DF /* zip.c in Sources */,
+				AAD6856819884266009D85DF /* platform.c in Sources */,
+				AAD6856B19884266009D85DF /* util.c in Sources */,
+				AAD6856919884266009D85DF /* main.c in Sources */,
+				AAD6856619884266009D85DF /* ioapi.c in Sources */,
+				AAD6856719884266009D85DF /* logging.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +297,7 @@
 				AA5B47D2198841510071745F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
