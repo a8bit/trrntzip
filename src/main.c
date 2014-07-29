@@ -169,7 +169,7 @@ GetFileList (unzFile UnZipHandle, char **FileNameArray, int *piElements)
 {
   int rc = 0;
   int iCount = 0;
-  char **TmpPtr = NULL;
+  // char **TmpPtr = NULL;
 
   unz_file_info64 ZipInfo;
 

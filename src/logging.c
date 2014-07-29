@@ -134,7 +134,7 @@ logprint3 (FILE * stdf, FILE * f1, FILE * f2, char *format, ...)
 int
 OpenProcessLog (const char * pszWritePath, const char * pszRelPath, MIGRATE * mig)
 {
-  int iPathLen = 0;
+  unsigned long iPathLen = 0;
   time_t now;
   struct tm *t;
   char szLogname[MAX_PATH + 1];
