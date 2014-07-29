@@ -9,7 +9,7 @@ trrntzip_SOURCES = \
 	logging.h \
 	platform.c \
 	platform.h \
-	trrntzip.c \
+	main.c \
 	unzip.c \
 	unzip.h \
 	util.c \

@@ -15,6 +15,7 @@
 		AAD6856A19884266009D85DF /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = AAD6855D19884266009D85DF /* unzip.c */; };
 		AAD6856B19884266009D85DF /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = AAD6855F19884266009D85DF /* util.c */; };
 		AAD6856C19884266009D85DF /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = AAD6856119884266009D85DF /* zip.c */; };
+		AAD6856E1988570D009D85DF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD6856D1988570D009D85DF /* libz.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,6 +60,7 @@
 		AAD6856219884266009D85DF /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zip.h; path = ../src/zip.h; sourceTree = "<group>"; };
 		AAD6856319884266009D85DF /* torrentzip.spec.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrentzip.spec.in; path = ../torrentzip.spec.in; sourceTree = "<group>"; };
 		AAD6856519884266009D85DF /* purgecruft.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = purgecruft.py; sourceTree = "<group>"; };
+		AAD6856D1988570D009D85DF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAD6856E1988570D009D85DF /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +78,7 @@
 		AA5B47BE198841510071745F = {
 			isa = PBXGroup;
 			children = (
+				AAD6856D1988570D009D85DF /* libz.dylib */,
 				AAD6856419884266009D85DF /* util */,
 				AA5B47C9198841510071745F /* trrntzip */,
 				AA5B47C8198841510071745F /* Products */,
