@@ -209,10 +209,10 @@ CheckZipStatus (unz64_s * UnzipStream, WORKSPACE * ws)
   unsigned long checksum, target_checksum = 0;
   off_t ch_length = UnzipStream->size_central_dir;
   off_t ch_offset = UnzipStream->central_pos - UnzipStream->size_central_dir;
-  off_t i = 0;
+  // off_t i = 0;
   char comment_buffer[COMMENT_LENGTH + 1];
   char *ep = NULL;
-  unsigned char x;
+  // unsigned char x;
   FILE *f = (FILE *) UnzipStream->filestream;
 
   // Quick check that the file at least appears to be a zip file.
@@ -688,7 +688,7 @@ GetDirFileList (const char* pszPath, int *piElements)
 
   if (dirp)
   {
-    while (direntp = readdir (dirp))
+    while ((direntp = readdir (dirp)))
     {
       if (iCount+2 >= *piElements)
       {
@@ -804,15 +804,15 @@ RecursiveMigrateDir (const char *pszRelPath, WORKSPACE * ws)
   int rc = 0;
 
   char szTmpBuf[MAX_PATH + 1];
-  char szRelPathBuf[MAX_PATH + 1];
+  // char szRelPathBuf[MAX_PATH + 1];
   int iElements = 0;
   char **FileNameArray = NULL;
   int iCounter = 0;
-  int n;
+  // int n;
   int FileNameStartPos;
 
   DIR *dirp = NULL;
-  struct dirent *direntp = NULL;
+  // struct dirent *direntp = NULL;
   struct stat istat;
 
   MIGRATE mig;
@@ -949,7 +949,7 @@ main (int argc, char **argv)
   int iCount = 0;
   int iOptionsFound = 0;
   int rc = 0;
-  char *ptr = NULL;
+  // char *ptr = NULL;
   char szStartPath[MAX_PATH + 1];
   char szErrorLogFileName[MAX_PATH + 1];
 
