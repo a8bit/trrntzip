@@ -43,7 +43,7 @@
 #include "logging.h"
 
 // We must change this at every new version
-#define TZ_VERSION      "0.9"
+#define TZ_VERSION      "0.91"
 
 #define MEGABYTE        1048576
 #define ARRAY_ELEMENTS  256
