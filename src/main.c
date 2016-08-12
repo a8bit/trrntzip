@@ -43,7 +43,7 @@
 #include "logging.h"
 
 // We must change this at every new version
-#define TZ_VERSION      "0.91"
+#define TZ_VERSION      "0.9"
 
 #define MEGABYTE        1048576
 #define ARRAY_ELEMENTS  256
@@ -65,7 +65,7 @@ WORKSPACE *AllocateWorkspace (void);
 void FreeWorkspace (WORKSPACE * ws);
 int StringCompare (const void *str1, const void *str2);
 char **GetFileList (unzFile UnZipHandle, char **FileNameArray, int *piElements);
-int CheckZipStatus (unz64_s * UnzipStream, WORKSPACE * ws);
+int CheckZipStatus (unzFile UnZipHandle, WORKSPACE * ws);
 int ShouldFileBeRemoved(int iArray, WORKSPACE * ws);
 int ZipHasDirEntry (WORKSPACE * ws);
 int MigrateZip (const char *zip_path, const char * pDir, WORKSPACE * ws, MIGRATE * mig);
@@ -169,7 +169,7 @@ GetFileList (unzFile UnZipHandle, char **FileNameArray, int *piElements)
 {
   int rc = 0;
   int iCount = 0;
-  // char **TmpPtr = NULL;
+  char **TmpPtr = NULL;
 
   unz_file_info64 ZipInfo;
 
@@ -204,28 +204,27 @@ GetFileList (unzFile UnZipHandle, char **FileNameArray, int *piElements)
 }
 
 int
-CheckZipStatus (unz64_s * UnzipStream, WORKSPACE * ws)
+CheckZipStatus (unzFile UnZipHandle, WORKSPACE * ws)
 {
   unsigned long checksum, target_checksum = 0;
-  off_t ch_length = UnzipStream->size_central_dir;
-  off_t ch_offset = UnzipStream->central_pos - UnzipStream->size_central_dir;
-  // off_t i = 0;
+  unz64_s *UnZipStream = (unz64_s *) UnZipHandle;
+  off_t ch_length = UnZipStream->size_central_dir;
+  off_t ch_offset = UnZipStream->central_pos - UnZipStream->size_central_dir;
+  off_t i = 0;
   char comment_buffer[COMMENT_LENGTH + 1];
   char *ep = NULL;
-  // unsigned char x;
-  FILE *f = (FILE *) UnzipStream->filestream;
+  unsigned char x;
+  FILE *f = (FILE *) UnZipStream->filestream;
 
   // Quick check that the file at least appears to be a zip file.
   rewind (f);
   if (fgetc (f) != 'P' && fgetc (f) != 'K')
     return STATUS_ERROR;
 
-  // Assume a TZ style archive comment and read it in. This is located at the very end of the file.
-  comment_buffer[COMMENT_LENGTH] = 0;
-  if (fseeko (f, -COMMENT_LENGTH, SEEK_END))
-    return STATUS_ERROR;
-
-  fread (comment_buffer, 1, COMMENT_LENGTH, f);
+  // unzGetGlobalComment will null term the buffer for us and return the length of the string
+  if (unzGetGlobalComment (UnZipHandle, comment_buffer, COMMENT_LENGTH + 1) != COMMENT_LENGTH) {
+    return STATUS_BAD_COMMENT;
+  }
 
   // Check static portion of comment.
   if (strncmp (gszApp, comment_buffer, COMMENT_LENGTH - 8))
@@ -237,10 +236,6 @@ CheckZipStatus (unz64_s * UnzipStream, WORKSPACE * ws)
   // Check to see if stroul was able to parse the entire checksum.
   if (errno || ep != comment_buffer + COMMENT_LENGTH)
     return STATUS_BAD_COMMENT;
-
-  // Comment checks out so seek to 4 before it...
-  if (fseeko (f, -(COMMENT_LENGTH + 4), SEEK_END))
-    return STATUS_ERROR;
 
   if (ch_length > ws->iCheckBufSize)
   {
@@ -254,8 +249,9 @@ CheckZipStatus (unz64_s * UnzipStream, WORKSPACE * ws)
   // Skip to start of the central header, and read it in.
   if (fseeko (f, ch_offset, SEEK_SET))
     return STATUS_ERROR;
- 
-  fread (ws->pszCheckBuf, 1, ch_length, f);
+
+  if (fread (ws->pszCheckBuf, 1, ch_length, f) != ch_length)
+    return STATUS_ERROR;
 
   // Calculate the crc32 of the central header.
   checksum = crc32 (crc32 (0L, NULL, 0), ws->pszCheckBuf, ch_length);
@@ -333,7 +329,6 @@ MigrateZip (const char *zip_path, const char * pDir, WORKSPACE * ws, MIGRATE * m
 {
   unz_file_info64 ZipInfo;
   unzFile UnZipHandle = NULL;
-  unz64_s *UnzipStream = NULL;
   zipFile ZipHandle = NULL;
   int zip64 = 0;
 
@@ -371,7 +366,7 @@ MigrateZip (const char *zip_path, const char * pDir, WORKSPACE * ws, MIGRATE * m
     sprintf( szZipFileName, "%s%c%s", pDir, DIRSEP, zip_path );
   }
   mktemp(szTmpZipFileName);
-  
+
   if (!access (szTmpZipFileName, F_OK) && remove (szTmpZipFileName))
   {
     logprint3 (stderr, mig->fProcessLog, ws->fErrorLog, "\n!!!! Temporary file exists and could not be automatically removed. Please remove the file %s and re-run this program. !!!!\n", szTmpZipFileName);
@@ -390,10 +385,8 @@ MigrateZip (const char *zip_path, const char * pDir, WORKSPACE * ws, MIGRATE * m
     return TZ_ERR;
   }
 
-  UnzipStream = (unz64_s *) UnZipHandle;
-
   // Check if zip is non-TZ or altered-TZ
-  rc = CheckZipStatus (UnzipStream, ws);
+  rc = CheckZipStatus (UnZipHandle, ws);
 
   switch (rc)
   {
@@ -406,7 +399,7 @@ MigrateZip (const char *zip_path, const char * pDir, WORKSPACE * ws, MIGRATE * m
     logprint3 (stderr, mig->fProcessLog, ws->fErrorLog, "Error allocating memory!\n");
     unzClose (UnZipHandle);
     return TZ_CRITICAL;
-	
+
   case STATUS_OK:
   case STATUS_OUT_OF_DATE:
   case STATUS_BAD_COMMENT:
@@ -424,7 +417,7 @@ MigrateZip (const char *zip_path, const char * pDir, WORKSPACE * ws, MIGRATE * m
   CHECK_DYNAMIC_STRING_ARRAY( ws->FileNameArray, ws->iElements );
   // Get the filelist from the zip file in canonical order
   ws->FileNameArray = GetFileList (UnZipHandle, ws->FileNameArray, &ws->iElements);
-  
+
   CHECK_DYNAMIC_STRING_ARRAY( ws->FileNameArray, ws->iElements );
 
   // GetFileList couldn't allocate enough memory to store the filelist
@@ -439,7 +432,7 @@ MigrateZip (const char *zip_path, const char * pDir, WORKSPACE * ws, MIGRATE * m
   // the \ is an invalid directory, and should always be /
   if (FindAndFixBadSlashes(ws))
      rc=STATUS_BAD_SLASHES;
-  
+
   if (rc==STATUS_OK && !qForceReZip)
   {
     // check if the zip has any dir entries that need removed
@@ -452,10 +445,10 @@ MigrateZip (const char *zip_path, const char * pDir, WORKSPACE * ws, MIGRATE * m
       return TZ_SKIPPED;
     }
   }
-  
+
   logprint (stdout, mig->fProcessLog, "Rezipping - %s\n", szZipFileName);
   logprint (stdout, mig->fProcessLog, "%s\n", DIVIDER);
-  
+
   if ((ZipHandle = zipOpen64 (szTmpZipFileName, 0)) == NULL)
   {
     logprint3 (stderr, mig->fProcessLog, ws->fErrorLog, "Error creating temporary zip file %s. Unable to process \"%s\"\n", szTmpZipFileName, szZipFileName);
@@ -581,7 +574,7 @@ MigrateZip (const char *zip_path, const char * pDir, WORKSPACE * ws, MIGRATE * m
         logprint3 (stderr, mig->fProcessLog, ws->fErrorLog, "CRC error in \"%s\" in \"%s\"!\n", szFileName, szZipFileName);
       else
         logprint3 (stderr, mig->fProcessLog, ws->fErrorLog, "Error while closing \"%s\" in \"%s\"!\n", szFileName, szZipFileName);
-      
+
 	  error = 1;
       break;
     }
@@ -645,7 +638,7 @@ MigrateZip (const char *zip_path, const char * pDir, WORKSPACE * ws, MIGRATE * m
     logprint3 (stderr, mig->fProcessLog, ws->fErrorLog, "!!!! Unable to remove \"%s\" for replacement with rezipped copy.\n", szZipFileName);
     if (remove (szTmpZipFileName))
       logprint3 (stderr, mig->fProcessLog, ws->fErrorLog, "!!!! Could not remove temporary file \"%s\".\n", szTmpZipFileName);
- 
+
  return TZ_ERR;
   }
 #endif
@@ -688,7 +681,7 @@ GetDirFileList (const char* pszPath, int *piElements)
 
   if (dirp)
   {
-    while ((direntp = readdir (dirp)))
+    while (direntp = readdir (dirp))
     {
       if (iCount+2 >= *piElements)
       {
@@ -804,15 +797,15 @@ RecursiveMigrateDir (const char *pszRelPath, WORKSPACE * ws)
   int rc = 0;
 
   char szTmpBuf[MAX_PATH + 1];
-  // char szRelPathBuf[MAX_PATH + 1];
+  char szRelPathBuf[MAX_PATH + 1];
   int iElements = 0;
   char **FileNameArray = NULL;
   int iCounter = 0;
-  // int n;
+  int n;
   int FileNameStartPos;
 
   DIR *dirp = NULL;
-  // struct dirent *direntp = NULL;
+  struct dirent *direntp = NULL;
   struct stat istat;
 
   MIGRATE mig;
@@ -869,7 +862,7 @@ RecursiveMigrateDir (const char *pszRelPath, WORKSPACE * ws)
 
   }
 
-  // Get our execution time (in seconds) for the conversion process 
+  // Get our execution time (in seconds) for the conversion process
   mig.ExecTime += difftime (time (NULL), mig.StartTime);
 
   if (rc != TZ_CRITICAL)
@@ -933,7 +926,7 @@ int RecursiveMigrateTop (const char * pszRelPath, WORKSPACE * ws )
 
   rc = RecursiveMigrate (pszRelPath, ws, &mig);
 
-  // Get our execution time (in seconds) for the conversion process 
+  // Get our execution time (in seconds) for the conversion process
   mig.ExecTime += difftime (time (NULL), mig.StartTime);
 
   if (rc != TZ_CRITICAL)
@@ -949,13 +942,13 @@ main (int argc, char **argv)
   int iCount = 0;
   int iOptionsFound = 0;
   int rc = 0;
-  // char *ptr = NULL;
+  char *ptr = NULL;
   char szStartPath[MAX_PATH + 1];
   char szErrorLogFileName[MAX_PATH + 1];
 
   for (iCount = 1 ; iCount < argc ; iCount++)
-  { 
-    if (argv[iCount][0] == '-') 
+  {
+    if (argv[iCount][0] == '-')
     {
       iOptionsFound++;
       strlwr (argv[iCount]);
@@ -1063,7 +1056,7 @@ main (int argc, char **argv)
     {
       #ifdef WIN32
       // This is only needed on Windows, to keep the
-      // command window window from disappearing when 
+      // command window window from disappearing when
       // the program completes.
       if (!qGUILaunch)
       {
